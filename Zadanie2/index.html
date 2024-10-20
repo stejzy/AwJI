@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyTODO App</title>
+    <script type="module" src="scripts.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="theme.css">
+ </head>
+ <body>
+
+    <h1>ToDoList</h1>
+    <form id="addElement">
+        <div class="form-group">
+            <label for="inputTitle">Title</label>
+            <input type="text" id="inputTitle"/><br>
+        </div>
+        <div class="form-group">
+            <label for="inputDescription">Description</label>
+            <input type="text" id="inputDescription"/><br>
+        </div>
+        <div class="form-group">
+            <label for="inputPlace">Place</label>
+            <input type="text" id="inputPlace"/><br>
+        </div>
+        <div class="form-group">
+            <label for="inputDate">Due date</label>
+            <input type="date" id="inputDate"/><br>
+        </div>
+        <input id="submitButton" type="button" value="Submit task"/>
+    </form>
+    <div id="searchDiv">
+        <label>Search</label>
+        <input type="text" id="inputSearch" placeholder="Type Your seach here..."/>
+    </div>
+    <div id="todoListView">
+        <table id="toDoTable">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Place</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            
+           
+            
+            </tbody>
+            
+        </table>
+    </div>
+
+ </body>
+</html>
