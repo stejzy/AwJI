@@ -75,10 +75,8 @@ let checkBetweenDates = function(todo) {
 
 let updateTodoList = function() {
     let toDoTable = document.getElementById("toDoTable");
-    
 
     let toDoTableBody = toDoTable.getElementsByTagName("tbody")[0];
-
 
     //remove all elements
     while (toDoTableBody.firstChild) {
@@ -86,69 +84,69 @@ let updateTodoList = function() {
     }
 
     //add all elements
-    let filterInput = document.getElementById("inputSearch");   
-    for (let todo in toDoList.filter(checkBetweenDates)) {
-    if (
-        (filterInput.value.toLowerCase() === "") ||
-        (toDoList[todo].title.toLowerCase().includes(filterInput.value.toLowerCase())) ||
-        (toDoList[todo].description.toLowerCase().includes(filterInput.value.toLowerCase()))
-    ) {
-        let row = toDoTableBody.insertRow();
+    let filterInput = document.getElementById("inputSearch");
 
-        let cellTitile = row.insertCell(0);
+    toDoList.filter(checkBetweenDates).forEach(todo => {
+        if (
+            (filterInput.value.toLowerCase() === "") ||
+            (todo.title.toLowerCase().includes(filterInput.value.toLowerCase())) ||
+            (todo.description.toLowerCase().includes(filterInput.value.toLowerCase()))
+        ) {
+            let row = toDoTableBody.insertRow();
 
-        cellTitile.innerHTML = toDoList[todo].title;
+            let cellTitile = row.insertCell(0);
 
-        let cellDescription = row.insertCell(1);
+            cellTitile.innerHTML = todo.title;
 
-        cellDescription.innerHTML = toDoList[todo].description;
+            let cellDescription = row.insertCell(1);
 
-        let cellPlace = row.insertCell(2);
+            cellDescription.innerHTML = todo.description;
 
-        cellPlace.innerHTML = toDoList[todo].place;
+            let cellPlace = row.insertCell(2);
 
-        let cellCategory = row.insertCell(3); 
+            cellPlace.innerHTML = todo.place;
 
-        cellCategory.innerHTML = toDoList[todo].category;
+            let cellCategory = row.insertCell(3);
 
-        let cellDate = row.insertCell(4);
+            cellCategory.innerHTML = todo.category;
 
-        const dueDate = new Date(toDoList[todo].dueDate);
+            let cellDate = row.insertCell(4);
 
-        
-        const day = String(dueDate.getDate()).padStart(2, '0');
-        const month = String(dueDate.getMonth() + 1).padStart(2, '0');
-        const year = dueDate.getFullYear();
+            const dueDate = new Date(todo.dueDate);
 
-        const formattedDate = `${day}-${month}-${year}`;
-        cellDate.innerHTML = formattedDate;
+            const day = String(dueDate.getDate()).padStart(2, '0');
+            const month = String(dueDate.getMonth() + 1).padStart(2, '0');
+            const year = dueDate.getFullYear();
 
-        
+            const formattedDate = `${day}-${month}-${year}`;
+            cellDate.innerHTML = formattedDate;
 
 
 
-        // let newElement = document.createElement("p");
-        // let newContent = document.createTextNode(toDoList[todo].title + " " +
-        //                                         toDoList[todo].description);
 
 
-        
-        let newDeleteButton = document.createElement("input");
-        newDeleteButton.type = "button";
-        newDeleteButton.value = "x";
-        newDeleteButton.addEventListener("click",
-            function() {
-                deleteTodo(todo);
-            });
+            // let newElement = document.createElement("p");
+            // let newContent = document.createTextNode(toDoList[todo].title + " " +
+            //                                         toDoList[todo].description);
 
-        let cellDelete = row.insertCell(5);
-        cellDelete.appendChild(newDeleteButton);
 
-    // newElement.appendChild(newContent);
-    // newElement.appendChild(newDeleteButton);
-    // todoListDiv.appendChild(newElement);
-  }
-}
+
+            let newDeleteButton = document.createElement("input");
+            newDeleteButton.type = "button";
+            newDeleteButton.value = "x";
+            newDeleteButton.addEventListener("click",
+                function() {
+                    deleteTodo(todo);
+                });
+
+            let cellDelete = row.insertCell(5);
+            cellDelete.appendChild(newDeleteButton);
+
+            // newElement.appendChild(newContent);
+            // newElement.appendChild(newDeleteButton);
+            // todoListDiv.appendChild(newElement);
+        }
+    });
 }
 
 let deleteTodo = function(index) {
