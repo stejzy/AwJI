@@ -57,7 +57,9 @@ h1 {
 #toDoTable th {
     font-size: 1.25rem;
 }
-
+#dateFilter {
+    text-align: center;
+}
 
 
 

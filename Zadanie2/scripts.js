@@ -2,6 +2,7 @@ import {API_KEY, BIN_ID} from './keys.js'
 
 "use strict"
 let toDoList = [];
+const HTTP_OK = 200;
 
 class toDoObject {
     constructor(title, description, place, category, dueDate){
@@ -15,7 +16,15 @@ class toDoObject {
 }
 
 let filterInput = document.getElementById("inputSearch");
+let startDateFilter = document.getElementById("startDateFilter");
+let endDateFilter = document.getElementById("endDateFilter");
 filterInput.addEventListener("input", function(event) {
+    updateTodoList();
+});
+startDateFilter.addEventListener("input", function(event) {
+    updateTodoList();
+});
+endDateFilter.addEventListener("input", function(event) {
     updateTodoList();
 });
 
@@ -23,7 +32,7 @@ let initList = function() {
     let req = new XMLHttpRequest();
 
     req.onreadystatechange = () => {
-        if (req.readyState == XMLHttpRequest.DONE) {
+        if (req.readyState === XMLHttpRequest.DONE && req.status === HTTP_OK) {
             const response = JSON.parse(req.responseText);
             toDoList = response.record;
             updateTodoList();
@@ -41,7 +50,7 @@ let updateJSONbin = function(toDoList) {
     let req = new XMLHttpRequest();
 
     req.onreadystatechange = () => {
-        if (req.readyState == XMLHttpRequest.DONE) {
+        if (req.readyState === XMLHttpRequest.DONE && req.status === HTTP_OK) {
             console.log(req.responseText);
         }
     };
@@ -50,6 +59,18 @@ let updateJSONbin = function(toDoList) {
     req.setRequestHeader("Content-Type", "application/json");
     req.setRequestHeader("X-Master-Key", API_KEY);
     req.send(toDoList);
+}
+
+let checkBetweenDates = function(todo) {
+    let startDate = new Date(startDateFilter.value);
+    let endDate = new Date(endDateFilter.value);
+    if (startDate.toString() !== 'Invalid Date' && endDate.toString() !== 'Invalid Date') {
+        let dueDate = new Date(todo.dueDate);
+        return dueDate >= startDate && dueDate <= endDate;
+    } else {
+        return true;
+    }
+
 }
 
 let updateTodoList = function() {
@@ -66,9 +87,9 @@ let updateTodoList = function() {
 
     //add all elements
     let filterInput = document.getElementById("inputSearch");   
-    for (let todo in toDoList) {
+    for (let todo in toDoList.filter(checkBetweenDates)) {
     if (
-        (filterInput.value.toLowerCase() == "") ||
+        (filterInput.value.toLowerCase() === "") ||
         (toDoList[todo].title.toLowerCase().includes(filterInput.value.toLowerCase())) ||
         (toDoList[todo].description.toLowerCase().includes(filterInput.value.toLowerCase()))
     ) {
