@@ -70,7 +70,6 @@ let checkBetweenDates = function(todo) {
     } else {
         return true;
     }
-
 }
 
 let updateTodoList = function() {
@@ -131,9 +130,12 @@ let updateTodoList = function() {
 
 
 
-            let newDeleteButton = document.createElement("input");
-            newDeleteButton.type = "button";
-            newDeleteButton.value = "x";
+            let newDeleteButton = document.createElement("button");
+            let icon = document.createElement("i");
+            icon.className = "fas fa-trash";
+            newDeleteButton.className = "btn btn-danger danger";
+            newDeleteButton.appendChild(icon);
+            console.log(todo);
             newDeleteButton.addEventListener("click",
                 function() {
                     deleteTodo(todo);
@@ -149,8 +151,8 @@ let updateTodoList = function() {
     });
 }
 
-let deleteTodo = function(index) {
-    toDoList.splice(index,1);
+let deleteTodo = function(todo) {
+    toDoList.splice(toDoList.indexOf(todo), 1);
     updateTodoList();
     updateJSONbin(JSON.stringify(toDoList));
 }
@@ -167,6 +169,15 @@ let addTodo = async function() {
       let newDescription = inputDescription.value;
       let newPlace = inputPlace.value;
       let newDate = new Date(inputDate.value);
+
+      //pseudo data validation
+      if (!newTitle || !newDescription || !newPlace || newDate.toString() === 'Invalid Date') {
+          alert("Wprowadź wszystkie dane!");
+          return;
+      }
+
+      let form = document.getElementById("addElement");
+      form.reset();
 
     // Wysyłanie zapytania do serwera o kategoryzację
     let newCategory;
