@@ -118,7 +118,8 @@ let updateTodoList = function() {
             const year = dueDate.getFullYear();
 
             const formattedDate = `${day}-${month}-${year}`;
-            cellDate.innerHTML = formattedDate;
+            //cellDate.innerHTML = formattedDate;
+            cellDate.innerHTML = dueDate.toLocaleDateString();
 
 
 
@@ -135,7 +136,6 @@ let updateTodoList = function() {
             icon.className = "fas fa-trash";
             newDeleteButton.className = "btn btn-danger danger";
             newDeleteButton.appendChild(icon);
-            console.log(todo);
             newDeleteButton.addEventListener("click",
                 function() {
                     deleteTodo(todo);
