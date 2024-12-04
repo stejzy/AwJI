@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "Start":  "node server.js",
+    "Start": "node server.js",
     "devStart": "nodemon server.js"
   },
   "author": "",
