@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -12,20 +12,20 @@ const orderSchema = new Schema({
     orderStatus: {
         type: Schema.Types.ObjectId,
         ref: 'OrderStatus',
-        required: true,
+        required: [true, 'Order status name is required'],
     },
     username: {
         type: String,
-        required: true,
+        required: [true, 'Username cannot be empty'],
     },
     email: {
         type: String,
-        required: true,
+        required: [true, 'Email is required'],
         match: [emailRegex, 'Please enter a valid email address.'],
     },
     phoneNumber: {
         type: String,
-        required: true,
+        required: [true, 'Phone number is required'],
         match: [phoneRegex, 'Please enter a valid phone number.'],
     },
     orderedItems: [
@@ -35,12 +35,12 @@ const orderSchema = new Schema({
             },
             quantity: {
                 type: Number,
-                required: true,
+                required: [true, 'Product quantity is required'],
                 validate: {
                     validator: function (value) {
                         return Number.isInteger(value) && value > 0;
                     },
-                    message: 'Please enter a valid quantity.',
+                    message: 'Quantity must be an integer greater than 0.',
                 },
             },
             priceAtOrder: {
@@ -51,6 +51,4 @@ const orderSchema = new Schema({
     ]
 })
 
-const Order = mongoose.model('Order', orderSchema);
-
-module.exports = { Order };
+export const Order = mongoose.model('Order', orderSchema);

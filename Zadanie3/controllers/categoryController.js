@@ -1,12 +1,16 @@
-const {Category} = require("../models/category");
+import { Category } from "../models/category.js";
+import { StatusCodes } from 'http-status-codes';
 
-const getAllCategories = async (req, res) => {
+export const getAllCategories = async (req, res) => {
     try {
         const categoriesList = await Category.find();
-        res.status(200).json(categoriesList);
+        res.status(StatusCodes.OK).json({
+            categories: categoriesList
+        });
     } catch (err) {
-        res.status(500).json({ error: 'Something went wrong' });
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: 'Failed to get all categories.',
+            error: err.message,
+        });
     }
 };
-
-module.exports = { getAllCategories };

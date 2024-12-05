@@ -1,10 +1,10 @@
-const { Category } = require('../models/category');
-const { OrderStatus } = require('../models/orderStatus');
+import { Category } from "../models/category.js";
+import { OrderStatus } from "../models/orderStatus.js";
 
 const predefinedCategories = ['Electronics', 'Books', 'Clothing', 'Home Appliances'];
 const predefinedStatuses = ['UNAPPROVED', 'APPROVED', 'CANCELLED', 'FULFILLED'];
 
-async function initializeDatabase() {
+export async function initializeDatabase() {
     try {
         for (const categoryName of predefinedCategories) {
             const existingCategory = await Category.findOne({ name: categoryName });
@@ -27,5 +27,3 @@ async function initializeDatabase() {
         console.error('Error initializing database:', err);
     }
 }
-
-module.exports = initializeDatabase;

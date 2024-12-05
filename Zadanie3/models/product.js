@@ -1,40 +1,43 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Product name is required'],
+        trim: true,
+        minlength: [1, 'Product name cannot be blank'],
     },
     description: {
         type: String,
-        required: true,
+        required: [true, 'Product description is required'],
+        minlength: [1, 'Product description cannot be blank'],
     },
     unitPrice: {
         type: Number,
-        required: true,
+        required: [true, 'Product unit price is required'],
         validate: {
             validator: function (value) {
                 return value > 0;
             },
-            message: 'Please enter a valid unit price.',
+            message: 'Unit price must be greater than 0.',
         },
     },
     unitWeight: {
         type: Number,
-        required: true,
+        required: [true, 'Product unit weight is required'],
         validate: {
             validator: function (value) {
                 return value > 0;
             },
-            message: 'Please enter a valid unit weight.',
+            message: 'Unit weight must be greater than 0.',
         },
     },
     category: {
-        type: Schema.Types.ObjectId, ref: 'Category', required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: [true, 'Category is required'],
     }
 })
 
-const Product = mongoose.model('Product', productSchema);
-
-module.exports = { Product };
+export const Product = mongoose.model('Product', productSchema);

@@ -1,14 +1,12 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const orderStatusSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Order status name is required'],
         unique: true,
     }
 })
 
-const OrderStatus = mongoose.model('OrderStatus', orderStatusSchema);
-
-module.exports = { OrderStatus };
+export const OrderStatus = mongoose.model('OrderStatus', orderStatusSchema);
