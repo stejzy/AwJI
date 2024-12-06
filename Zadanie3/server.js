@@ -23,10 +23,15 @@ import productsRouter from "./routes/products.js";
 import categoriesRouter from "./routes/categories.js";
 import orderStatusesRouter from "./routes/orderStatus.js";
 import orderRouter from "./routes/order.js";
-app.use('/products', productsRouter)
+import authRouter from "./routes/auth.js";
+import initializeRouter from "./routes/initialize.js";
+import { authenticateToken } from './middleware/authMiddleware.js';
+app.use('/products', authenticateToken(), productsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/status', orderStatusesRouter);
-app.use('/orders', orderRouter);
+app.use('/orders', authenticateToken(), orderRouter);
+app.use('/', authRouter);
+app.use('/', initializeRouter);
 
 
 process.on('SIGINT', async () => {
