@@ -1,8 +1,10 @@
 import { Category } from "../models/category.js";
 import { Product } from "../models/product.js";
+import { generateSeoDescription } from "./groqController.js";
 
 import { StatusCodes } from 'http-status-codes';
 import { Types } from "mongoose";
+
 
 export const getAllProducts = async (req, res) => {
     try {
@@ -132,3 +134,36 @@ export const updateProduct = async (req, res) => {
         });
     }
 }
+
+
+
+
+export const getSeoDescriptionForProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!Types.ObjectId.isValid(id)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid product ID format.' });
+        }
+
+        const product = await Product.findOne({ _id: id });
+
+        if (!product) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Product not found' });
+        }
+
+        
+        const seoDescription = await generateSeoDescription(product);
+        
+        res.status(StatusCodes.OK).json({
+            seoDescription: seoDescription
+        });
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: 'Failed to generate SEO description.',
+            error: err.message
+        });
+    }
+};
+
+

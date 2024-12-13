@@ -2,6 +2,7 @@ import { Order } from "../models/order.js";
 import { StatusCodes } from 'http-status-codes';
 import { Product } from '../models/product.js';
 import { OrderStatus } from '../models/orderStatus.js';
+import {getUsernameById} from "./userController.js"
 import {Types} from "mongoose";
 
 
@@ -232,5 +233,63 @@ export const updateOrder = async (req, res) => {
             });
         }
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Failed to update order.', details: err.message });
+    }
+};
+
+
+
+export const addOpinion = async (req, res) => {
+    const { id } = req.params;  // Id zamówienia
+    const { rating, comment } = req.body;  // Ocena i treść opinii
+
+    try {
+        // Sprawdzamy, czy id zamówienia jest poprawne
+        if (!Types.ObjectId.isValid(id)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid order ID format.' });
+        }
+
+        // Pobieramy zamówienie z bazy danych
+        const order = await Order.findById(id);
+
+        if (!order) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Order not found.' });
+        }
+
+        // Sprawdzamy, czy status zamówienia umożliwia dodanie opinii
+        const orderStatus = await OrderStatus.findById(order.orderStatus);
+        if (orderStatus.name !== 'FULFILLED' && orderStatus.name !== 'CANCELLED') {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: 'You can only add opinions to orders with status "FULFILLED" or "CANCELLED".'
+            });
+        }
+
+        const username = await getUsernameById(req.user.id);
+
+        // Sprawdzamy, czy użytkownik jest właścicielem zamówienia
+        if (order.username !== username) {
+            console.log(order.username)
+            console.log(req.user.username)
+            return res.status(StatusCodes.FORBIDDEN).json({ message: 'You can only add opinions to your own orders.' });
+        }
+
+        // Tworzymy nową opinię
+        const newOpinion = {
+            rating,
+            comment
+        };
+
+        // Dodajemy opinię do zamówienia
+        order.opinions.push(newOpinion);
+        await order.save();
+
+        res.status(StatusCodes.CREATED).json({
+            message: 'Opinion added successfully.',
+            opinion: newOpinion
+        });
+    } catch (err) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: 'Error adding opinion.',
+            error: err.message
+        });
     }
 };

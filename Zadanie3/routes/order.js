@@ -6,7 +6,8 @@ import {
     getOrdersByUsername,
     getOrderById,
     getOrdersByStatusId,
-    updateOrder
+    updateOrder,
+    addOpinion
 } from "../controllers/orderController.js";
 
 router.get('/', getAllOrders)
@@ -15,5 +16,6 @@ router.get('/user/:username', getOrdersByUsername)
 router.get('/:id', getOrderById)
 router.get('/status/:id', getOrdersByStatusId)
 router.put('/:id', updateOrder)
+router.post('/:id/opinions', addOpinion);
 
 export default router;
