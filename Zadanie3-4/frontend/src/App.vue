@@ -1,9 +1,11 @@
 <template>
-  <router-view></router-view>
+  <router-view ></router-view>
+  <router-view name="Products" :products="products" :categories="categories"></router-view>
 </template>
 
 <script>
 import axios from "axios";
+import NavbarComponent from "./components/NavbarComponent.vue";
 
 export default {
   name: "App",
@@ -26,19 +28,6 @@ export default {
           "http://localhost:3000/categories"
         );
 
-        // Zaktualizuj trasę "/products" w routerze
-        this.$router.options.routes.forEach((route) => {
-          if (route.path === "/") {
-            route.children.forEach((childRoute) => {
-              if (childRoute.path === "products") {
-                childRoute.meta.products = productsResponse.data.products;
-                childRoute.meta.categories = categoriesResponse.data.categories;
-              }
-            });
-          }
-        });
-
-        // Zapisz dane do lokalnych zmiennych (opcjonalnie)
         this.products = productsResponse.data.products;
         this.categories = categoriesResponse.data.categories;
       } catch (error) {
