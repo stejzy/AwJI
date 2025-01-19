@@ -8,7 +8,7 @@ import { Types } from "mongoose";
 
 export const getAllProducts = async (req, res) => {
     try {
-        const productsList = await Product.find();
+        const productsList = await Product.find().populate('category', 'name');;
         res.status(StatusCodes.OK).json({
             products: productsList
         });
