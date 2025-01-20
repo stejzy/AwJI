@@ -8,7 +8,7 @@ import { Types } from "mongoose";
 
 export const getAllProducts = async (req, res) => {
     try {
-        const productsList = await Product.find().populate('category', 'name');;
+        const productsList = await Product.find().populate('category', 'name');
         res.status(StatusCodes.OK).json({
             products: productsList
         });
@@ -48,11 +48,7 @@ export const createProduct = async (req, res) => {
     try{
         const { name, description, unitPrice, unitWeight, category } = req.body;
 
-        if (!Types.ObjectId.isValid(category)) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid category ID format.' });
-        }
-
-        const existingCategory = await Category.findById(category);
+        const existingCategory = await Category.findOne({ name: category });
         if (!existingCategory) {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Category not found.' });
         }
@@ -62,7 +58,7 @@ export const createProduct = async (req, res) => {
             description,
             unitPrice,
             unitWeight,
-            category: existingCategory._id,
+            category: existingCategory,
         });
 
         await newProduct.save();

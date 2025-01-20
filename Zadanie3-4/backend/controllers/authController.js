@@ -25,12 +25,12 @@ export const login = async (req, res) => {
         }
 
         const accessToken = jwt.sign(
-            { id: user._id, role: user.role },
+            { id: user._id, role: user.role, username: user.username },
             process.env.JWT_SECRET_KEY,
             { expiresIn: process.env.JWT_EXPIRATION || '1h' }
         )
         const refreshToken = jwt.sign(
-            { id: user._id, role: user.role },
+            { id: user._id, role: user.role, username: user.username },
             process.env.JWT_REFRESH_KEY,
             { expiresIn: process.env.JWT_REFRESH_TIMEOUT || '7d' }
         )
@@ -62,6 +62,7 @@ export const register = async (req, res) => {
         await newUser.save();
         res.status(StatusCodes.CREATED).json({
             message: 'User registered successfully',
+            success: true,
         });
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -79,14 +80,14 @@ export const refreshToken = async (req, res) => {
     }
 
     try {
-        const payload = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
+        const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
         const newAccessToken = jwt.sign(
-            { id: payload.id, role: payload.role },
+            { id: payload.id, role: payload.role, username: payload.username },
             process.env.JWT_SECRET_KEY,
             { expiresIn: process.env.JWT_EXPIRATION || '1h' }
         );
         res.json({accessToken: newAccessToken});
     } catch (err) {
-        res.status(StatusCodes.FORBIDDEN).json({ message: 'Inavlid refresh token' });
+        res.status(StatusCodes.FORBIDDEN).json({ message: 'Invalid refresh token' });
     }
 }

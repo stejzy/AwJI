@@ -1,10 +1,53 @@
+<script setup>
+import {ref, computed, onMounted, reactive} from "vue";
+import axios from "axios";
+const selectedCategory = ref("");
+const searchQuery = ref("");
+const tableHeaders = ["#", "Nazwa", "Opis", "Cena", "Waga", "Kategoria"];
+
+const state = reactive({
+  products: [],
+  categories: [],
+  isLoading: true,
+});
+
+onMounted(async () => {
+  try {
+    const response1 = await axios.get(`/api/products/`);
+    state.products = response1.data.products;
+    const response2 = await axios.get(`/api/categories/`);
+    state.categories = response2.data.categories;
+  } catch (error) {
+    console.log("Error fetching jobs or categories.", error);
+  } finally {
+    state.isLoading = false;
+  }
+})
+
+const filteredProducts = computed(() => {
+  return state.products.filter((product) => {
+    const matchesCategory =
+        !selectedCategory.value || product.category._id === selectedCategory.value;
+    const matchesSearchQuery = product.name
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase());
+
+    return matchesCategory && matchesSearchQuery;
+  });
+});
+
+const selectCategory = (categoryID) => {
+  selectedCategory.value = categoryID;
+};
+</script>
+
 <template>
   <div class="container">
     <div class="dropdown d-flex justify-content-end mb-3">
       <input
         type="search"
         class="form-control me-2 custom-width"
-        placeholder="Search products by name"
+        placeholder="Wyszukaj po nazwie produktu"
         v-model="searchQuery"
       />
       <button
@@ -14,15 +57,15 @@
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        Select Category
+        Wybierz kategorię
       </button>
       <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
         <li>
           <a class="dropdown-item" href="#" @click.prevent="selectCategory('')">
-            All Categories
+            Wszystkie kategorie
           </a>
         </li>
-        <li v-for="category in categories" :key="category._id">
+        <li v-for="category in state.categories" :key="category._id">
           <a
             class="dropdown-item"
             href="#"
@@ -43,8 +86,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="products.length === 0">
-          <td colspan="6" class="text-center">No products available</td>
+        <tr v-if="state.products.length === 0">
+          <td colspan="6" class="text-center">Brak produktów</td>
         </tr>
         <tr v-else v-for="(product, index) in filteredProducts" :key="index">
           <th scope="row">{{ index + 1 }}</th>
@@ -58,39 +101,6 @@
     </table>
   </div>
 </template>
-
-<script>
-export default {
-  name: "ProductsComponent",
-  props: ["products", "categories"],
-  data: function () {
-    return {
-      selectedCategory: "",
-      searchQuery: "",
-      tableHeaders: ["#", "Name", "Description", "Price", "Weight", "Category"],
-    };
-  },
-  computed: {
-    filteredProducts() {
-      return this.products.filter((product) => {
-        const matchesCategory =
-          !this.selectedCategory ||
-          product.category._id === this.selectedCategory;
-        const matchesSearchQuery = product.name
-          .toLowerCase()
-          .includes(this.searchQuery.toLowerCase());
-
-        return matchesCategory && matchesSearchQuery;
-      });
-    },
-  },
-  methods: {
-    selectCategory(categoryID) {
-      this.selectedCategory = categoryID;
-    },
-  },
-};
-</script>
 
 <style>
 .custom-width {
