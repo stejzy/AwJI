@@ -42,63 +42,68 @@ const selectCategory = (categoryID) => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="dropdown d-flex justify-content-end mb-3">
-      <input
-        type="search"
-        class="form-control me-2 custom-width"
-        placeholder="Wyszukaj po nazwie produktu"
-        v-model="searchQuery"
-      />
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        id="categoryDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        Wybierz kategorię
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-        <li>
-          <a class="dropdown-item" href="#" @click.prevent="selectCategory('')">
-            Wszystkie kategorie
-          </a>
-        </li>
-        <li v-for="category in state.categories" :key="category._id">
-          <a
-            class="dropdown-item"
-            href="#"
-            @click.prevent="selectCategory(category._id)"
-          >
-            {{ category.name }}
-          </a>
-        </li>
-      </ul>
-    </div>
+  <div v-if="state.isLoading">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+  </div>
+  <div v-else>
+    <div class="container">
+      <div class="dropdown d-flex justify-content-end mb-3">
+        <input
+          type="search"
+          class="form-control me-2 custom-width"
+          placeholder="Wyszukaj po nazwie produktu"
+          v-model="searchQuery"
+        />
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="categoryDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Wybierz kategorię
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+          <li>
+            <a class="dropdown-item" href="#" @click.prevent="selectCategory('')">
+              Wszystkie kategorie
+            </a>
+          </li>
+          <li v-for="category in state.categories" :key="category._id">
+            <a
+              class="dropdown-item"
+              href="#"
+              @click.prevent="selectCategory(category._id)"
+            >
+              {{ category.name }}
+            </a>
+          </li>
+        </ul>
+      </div>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th v-for="header in tableHeaders" :key="header">
-            {{ header }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="state.products.length === 0">
-          <td colspan="6" class="text-center">Brak produktów</td>
-        </tr>
-        <tr v-else v-for="(product, index) in filteredProducts" :key="index">
-          <th scope="row">{{ index + 1 }}</th>
-          <td>{{ product.name }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.unitPrice }}</td>
-          <td>{{ product.unitWeight }}</td>
-          <td>{{ product.category.name }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th v-for="header in tableHeaders" :key="header">
+              {{ header }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="state.products.length === 0">
+            <td colspan="6" class="text-center">Brak produktów</td>
+          </tr>
+          <tr v-else v-for="(product, index) in filteredProducts" :key="index">
+            <th scope="row">{{ index + 1 }}</th>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.unitPrice }}</td>
+            <td>{{ product.unitWeight }}</td>
+            <td>{{ product.category.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 

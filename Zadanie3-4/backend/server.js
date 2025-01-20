@@ -34,7 +34,7 @@ import orderRouter from "./routes/order.js";
 import authRouter from "./routes/auth.js";
 import initializeRouter from "./routes/initialize.js";
 import { authenticateToken } from './middleware/authMiddleware.js';
-app.use('/products', authenticateToken(), productsRouter);
+app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/status', orderStatusesRouter);
 app.use('/orders', authenticateToken(), orderRouter);
