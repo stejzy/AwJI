@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Product } from '../models/product.js';
 import csv from 'csv-parser';
 import { Readable } from 'stream';
+import {Category} from "../models/category.js";
 
 export const initializeProducts = async (req, res) => {
     try {
@@ -32,7 +33,23 @@ export const initializeProducts = async (req, res) => {
                 message: 'Unsupported file format. Use JSON or CSV.'
             })
         }
-        await Product.insertMany(products);
+
+        const categories = await Category.find();
+
+        const categoryMap = categories.reduce((map, category) => {
+            map[category.name] = category._id;
+            return map;
+        }, {});
+
+        const updatedProducts = products.map(product => {
+            if (categoryMap[product.category]) {
+                product.category = categoryMap[product.category];
+            }
+            return product;
+        });
+
+
+        await Product.insertMany(updatedProducts);
         res.status(StatusCodes.OK).json({
             message: 'Successfully initialized products.'
         })

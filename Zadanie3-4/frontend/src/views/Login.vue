@@ -21,11 +21,14 @@ const login = async () => {
 </script>
 
 <template>
-  <div
-    class="container d-flex justify-content-center align-items-center mt-5"
-  >
+  <div class="container d-flex justify-content-center align-items-center mt-5">
     <div class="w-50 p-4 border rounded shadow">
       <h1 class="text-center">Zaloguj się</h1>
+      
+      <div v-if="error" class="alert alert-danger text-center" role="alert">
+        {{ error }}
+      </div>
+
       <form @submit.prevent="login">
         <div class="form-group mt-5">
           <label for="username">Nazwa użytkownika</label>
@@ -40,11 +43,11 @@ const login = async () => {
         <div class="form-group mt-3">
           <label for="password">Hasło</label>
           <input
-            type="password"
-            v-model="password"
-            class="form-control"
-            id="password"
-            placeholder="Wpisz hasło"
+              type="password"
+              v-model="password"
+              class="form-control"
+              id="password"
+              placeholder="Wpisz hasło"
           />
         </div>
         <button type="submit" class="btn btn-primary w-100 mt-3">Zaloguj się</button>
@@ -52,3 +55,9 @@ const login = async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.alert {
+  margin-bottom: 20px;
+}
+</style>

@@ -31,6 +31,9 @@ export const useCartStore = defineStore('cart', {
         getProductById: (state) => (id) => state.cart.id,
         cartItems: (state) => Object.values(state.cart),
         totalQuantity: (state) => Object.values(state.cart).reduce((sum, product) => sum + product.quantity, 0),
-        totalPrice: (state) => Object.values(state.cart).reduce((sum, product) => sum + product.quantity * product.unitPrice, 0),
+        totalPrice: (state) => {
+            const sum = Object.values(state.cart).reduce((sum, product) => sum + product.quantity * product.unitPrice, 0);
+            return parseFloat(sum.toFixed(2));
+        },
     },
 })

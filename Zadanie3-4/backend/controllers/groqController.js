@@ -5,8 +5,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function generateSeoDescription(product) {
     try {
-        const description = await getGroqChatCompletion(product.name, product.description, product.unitPrice, product.unitWeight, product.category);
-        return description;
+        return await getGroqChatCompletion(product.name, product.description, product.unitPrice, product.unitWeight, product.category);
     } catch (err) {
         console.error('Error generating SEO description:', err);
         throw new Error('Failed to generate SEO description');
@@ -29,7 +28,9 @@ async function getGroqChatCompletion(name, description, price, weight, category)
         - Relevant keywords for SEO optimization
         - A call-to-action (e.g., Buy Now)
 
-        The description should be professional, informative, and persuasive.
+        The description should be professional, informative, and persuasive. Don't write additional text, only using html and dont use html, head, body tags.
+        Treat this as the message you will say will be displayed in description of this product on some website so don't write additional information besides description.
+        Don't include informations about price or category. Use polish language.
     `;
   
     const response = await groq.chat.completions.create({

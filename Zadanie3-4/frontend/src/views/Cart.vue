@@ -57,6 +57,14 @@ const submitOrder = async () => {
     toast.error("Wystąpił błąd przy tworzeniu zamówienia.");
   }
 };
+
+const onQuantityChange = (item) => {
+  item.quantity = Number(item.quantity);
+  if (item.quantity === 6) {
+    item.quantity = 6;
+  }
+  cartStore.saveCart();
+};
 </script>
 
 <template>
@@ -66,13 +74,17 @@ const submitOrder = async () => {
       <p>Koszyk jest pusty.</p>
     </div>
     <template v-else>
+      <button class="btn btn-primary" @click="cartStore.clearCart()">
+        Wyczyść koszyk
+      </button>
       <table class="table table-hover mt-3">
         <thead>
         <tr>
           <th>#</th>
           <th>Nazwa produktu</th>
-          <th>Cena</th>
           <th>Ilość</th>
+          <th>Cena</th>
+          <th>Łączna cena</th>
           <th></th>
         </tr>
         </thead>
@@ -80,8 +92,24 @@ const submitOrder = async () => {
         <tr v-for="(item, index) in cartItems" :key="item._id">
           <td>{{ index + 1 }}</td>
           <td>{{ item.name }}</td>
+          <td>
+            <template v-if="item.quantity < 6">
+              <select v-model="item.quantity"   class="form-select small-select" @change="onQuantityChange(item)">
+                <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+                <option value="6">6+</option>
+              </select>
+            </template>
+            <template v-else>
+              <input
+                  type="number"
+                  max="99"
+                  v-model="item.quantity"
+                  class="form-control small-input"
+              />
+            </template>
+          </td>
           <td>{{ item.unitPrice }} zł</td>
-          <td>{{ item.quantity }}</td>
+          <td> {{(item.unitPrice * item.quantity).toFixed(2)}} zł</td>
           <td>
             <button class="btn btn-danger btn-sm" @click="removeFromCart(item._id)">
               Usuń
@@ -132,7 +160,10 @@ const submitOrder = async () => {
 </template>
 
 <style>
-.table {
-  max-width: 100%;
+.small-input {
+  max-width: 80px;
+}
+.small-select {
+  max-width: 80px;
 }
 </style>

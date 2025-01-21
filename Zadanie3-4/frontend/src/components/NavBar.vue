@@ -76,6 +76,15 @@
               Zamówienia
             </RouterLink>
           </li>
+          <li class="nav-item">
+            <RouterLink
+                class="nav-link"
+                :class="{ active: isActiveLink('/init') }"
+                to="/init"
+            >
+              Inicjalizacja
+            </RouterLink>
+          </li>
         </ul>
         <ul class="navbar-nav">
           <template v-if="!isLoggedIn">

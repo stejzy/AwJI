@@ -41,8 +41,12 @@ const register = async () => {
     toast.success("Pomyślnie utworzono konto.");
 
   } catch (error) {
-    console.error("Error during registration:", error);
-    toast.error("Wystąpił błąd w trakcie rejestracji.");
+    if (error.response && error.response.data && error.response.data.errors) {
+      usernameError.value = error.response.data.errors.username;
+    } else {
+      console.error("Error during registration:", error);
+      toast.error("Wystąpił błąd w trakcie rejestracji.");
+    }
   }
 };
 </script>

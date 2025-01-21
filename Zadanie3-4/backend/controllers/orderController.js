@@ -8,7 +8,9 @@ import {Types} from "mongoose";
 
 export const getAllOrders = async (req, res) => {
     try {
-        const ordersList = await Order.find();
+        const ordersList = await Order.find()
+            .populate('orderStatus', 'name')
+            .populate('orderedItems.product', 'name');
         res.status(StatusCodes.OK).json({
             orders: ordersList
         });
@@ -217,6 +219,7 @@ export const updateOrder = async (req, res) => {
             existingOrder.orderedItems = updatedItems;
         }
 
+        existingOrder.approvalDate = new Date();
         await existingOrder.save();
 
         res.status(StatusCodes.OK).json({ message: 'Order updated successfully.', order: existingOrder });

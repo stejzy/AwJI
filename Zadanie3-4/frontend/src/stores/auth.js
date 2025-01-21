@@ -86,7 +86,7 @@ export const useAuthStore = defineStore('auth', {
     },
     getters: {
         isAuthenticated: (state) => !!state.accessToken,
-        isClient: (state) => state.user.role.includes('KLIENT'),
-        isEmployee: (state) => state.user.role.includes('PRACOWNIK'),
+        isClient: (state) => state.user?.role.includes('KLIENT') || false,
+        isEmployee: (state) => state.user?.role.includes('PRACOWNIK') || false,
     },
 });

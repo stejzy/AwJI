@@ -43,16 +43,16 @@ const selectCategory = (categoryID) => {
 </script>
 
 <template>
-  <div v-if="state.isLoading">
+  <template v-if="state.isLoading">
     <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-  </div>
-  <div v-else>
-    <div class="container">
+  </template>
+  <template v-else>
+    <div class="container custom-container">
       <h2>Lista produktów</h2>
       <div class="dropdown d-flex justify-content-end mb-3">
         <input
             type="search"
-            class="form-control me-2 custom-width"
+            class="form-control me-2"
             placeholder="Wyszukaj po nazwie produktu"
             v-model="searchQuery"
         />
@@ -91,17 +91,15 @@ const selectCategory = (categoryID) => {
             v-else
             v-for="product in filteredProducts"
             :key="product._id"
-            class="col-md-4 mb-4"
+            class="col-12 col-md-4 mb-4"
         >
-          <ProductCard :product="product" :categories="state.categories"> </ProductCard>
+          <ProductCard :product="product" :categories="state.categories" />
         </div>
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <style>
-.custom-width {
-  width: 20%;
-}
+
 </style>

@@ -5,6 +5,7 @@ import LoginComponent from "@/views/Login.vue";
 import RegisterComponent from "@/views/Register.vue";
 import Cart from "@/views/Cart.vue";
 import Orders from "@/views/Orders.vue";
+import Init from "@/views/Init.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,12 @@ const router = createRouter({
             path: "/orders",
             name: "orders",
             component: Orders,
+            meta: { requiresAuth: true }
+        },
+        {
+            path: "/init",
+            name: "init",
+            component: Init,
             meta: { requiresAuth: true }
         }
     ]

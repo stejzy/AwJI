@@ -4,7 +4,6 @@ import { generateSeoDescription } from "./groqController.js";
 
 import { StatusCodes } from 'http-status-codes';
 import { Types } from "mongoose";
-import {OrderStatus} from "../models/orderStatus.js";
 
 
 export const getAllProducts = async (req, res) => {
@@ -90,13 +89,23 @@ export const updateProduct = async (req, res) => {
         if (category) {
             updatedCategory = await Category.findOne({_id: category._id});
             if (!updatedCategory) {
-                return res.status(StatusCodes.NOT_FOUND).json({ message: 'Category not found.' });
+                return res.status(StatusCodes.NOT_FOUND).json({
+                    message: 'Category not found.',
+                    errors: {
+                         category: `Category with name ${category.name} not found.`,
+                    }
+                });
             }
         }
 
         const product = await Product.findById(id);
         if (!product) {
-            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Product not found.' });
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: 'Product not found.',
+                errors: {
+                    name: `Product with id ${id} not found.`
+                }
+            });
         }
 
         product.name = name || product.name;
@@ -114,10 +123,14 @@ export const updateProduct = async (req, res) => {
 
     } catch (err) {
         if (err.name === 'ValidationError') {
-            const errors = Object.values(err.errors).map(e => e.message);
+            const validationErrors = {};
+            Object.values(err.errors).forEach(error => {
+                validationErrors[error.path] = error.message;
+            });
+
             return res.status(StatusCodes.BAD_REQUEST).json({
                 message: 'Validation error',
-                errors: errors
+                errors: validationErrors
             });
         }
 

@@ -50,6 +50,16 @@ export const login = async (req, res) => {
 export const register = async (req, res) => {
     const { username, password, role } = req.body;
 
+    const user = await User.findOne({ username });
+    if (user) {
+        return res.status(StatusCodes.CONFLICT).json({
+            message: 'User with that username already exists.',
+            errors: {
+                username: 'User with that username already exists.',
+            }
+        });
+    }
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
