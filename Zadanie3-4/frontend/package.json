@@ -17,7 +17,8 @@
     "primeicons": "^7.0.0",
     "sass": "^1.83.4",
     "vue": "^3.2.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

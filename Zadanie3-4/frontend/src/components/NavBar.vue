@@ -31,8 +31,33 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <RouterLink class="navbar-brand" to="/">AWJI</RouterLink>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <div class="d-flex align-items-center">
+        <RouterLink
+            to="/cart"
+            class="nav-link me-4 d-lg-none"
+            :class="{ active: isActiveLink('/cart') }"
+        >
+          <i class="pi pi-shopping-cart fs-4"></i>
+          <span
+              class="badge bg-danger text-white position-absolute translate-middle rounded-pill"
+          >
+            {{ authStore.isAuthenticated ? cartItemsQuantity : 0 }}
+          </span>
+        </RouterLink>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <RouterLink
                 class="nav-link"
@@ -42,53 +67,63 @@
               Produkty
             </RouterLink>
           </li>
+          <li class="nav-item">
+            <RouterLink
+                class="nav-link"
+                :class="{ active: isActiveLink('/orders') }"
+                to="/orders"
+            >
+              Zamówienia
+            </RouterLink>
+          </li>
         </ul>
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <template v-if="!isLoggedIn">
-              <li class="nav-item">
-                <RouterLink
-                    class="nav-link"
-                    :class="{ active: isActiveLink('/login') }"
-                    to="/login"
-                >Zaloguj</RouterLink>
-              </li>
-              <li class="nav-item">
-                <RouterLink
-                    class="nav-link"
-                    :class="{ active: isActiveLink('/register') }"
-                    to="/register"
-                >Zarejestruj</RouterLink>
-              </li>
-            </template>
+        <ul class="navbar-nav">
+          <template v-if="!isLoggedIn">
+            <li class="nav-item">
+              <RouterLink
+                  class="nav-link"
+                  :class="{ active: isActiveLink('/login') }"
+                  to="/login"
+              >
+                Zaloguj
+              </RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink
+                  class="nav-link"
+                  :class="{ active: isActiveLink('/register') }"
+                  to="/register"
+              >
+                Zarejestruj
+              </RouterLink>
+            </li>
+          </template>
           <template v-else>
             <li class="nav-item">
               <span class="nav-link">Witaj, {{ authStore.user.username }}</span>
             </li>
             <li class="nav-item">
               <button
-                  v-if="isLoggedIn"
                   @click="logout"
-                  class="btn btn-outline-danger ms-2"
+                  class="btn btn-danger"
               >
                 Wyloguj
               </button>
             </li>
           </template>
-          <li class="nav-item">
-            <RouterLink
-                to="/cart"
-                class="nav-link position-relative"
-                :class="{ active: isActiveLink('/cart') }"
-            >
-              <i class="pi pi-shopping-cart fs-4"></i>
-              <span
-                  class="badge bg-danger text-white position-absolute top-0 start-100 translate-middle rounded-pill"
-              >
-                {{ authStore.isAuthenticated ? cartItemsQuantity : 0 }}
-              </span>
-            </RouterLink>
-          </li>
         </ul>
+        <RouterLink
+            to="/cart"
+            class="nav-link position-relative d-none d-lg-block mx-2"
+            :class="{ active: isActiveLink('/cart') }"
+        >
+          <i class="pi pi-shopping-cart fs-4"></i>
+          <span
+              class="badge bg-danger text-white position-absolute translate-middle rounded-pill"
+          >
+            {{ authStore.isAuthenticated ? cartItemsQuantity : 0 }}
+          </span>
+        </RouterLink>
       </div>
     </div>
   </nav>

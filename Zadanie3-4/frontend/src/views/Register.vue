@@ -1,14 +1,13 @@
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import axios from 'axios';
+import {useToast} from "vue-toastification";
 
-const router = useRouter();
+const toast = useToast();
 
 const username = ref('');
 const password = ref('');
 const password2 = ref('');
-const role = ref('KLIENT');
 
 const usernameError = ref('');
 const passwordError = ref('');
@@ -34,29 +33,22 @@ const register = async () => {
   }
 
   try {
-    const response = await axios.post('/api/register', {
+    await axios.post('/api/register', {
       username: username.value,
       password: password.value,
-      role: role.value,
+      role: "KLIENT",
     });
+    toast.success("Pomyślnie utworzono konto.");
 
-    console.log(response.data);
-
-    if (response.data.success) {
-      alert("Pomyślnie zarejestrowano!");
-      router.push('/');
-    } else {
-      alert("Błąd w trakcie rejestracji.");
-    }
   } catch (error) {
     console.error("Error during registration:", error);
-    alert("Wystąpił błąd w trakcie rejestracji.");
+    toast.error("Wystąpił błąd w trakcie rejestracji.");
   }
 };
 </script>
 
 <template>
-  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="container d-flex justify-content-center align-items-center mt-5">
     <div class="w-50 p-4 border rounded shadow">
       <h1 class="text-center">Rejestracja</h1>
       <form @submit.prevent="register">
@@ -94,14 +86,6 @@ const register = async () => {
               placeholder="Potwierdź hasło"
           />
           <small v-if="passwordError" class="text-danger">{{ passwordError }}</small>
-        </div>
-
-        <div class="form-group mt-3">
-          <label for="role">Rola</label>
-          <select v-model="role" class="form-control" id="role">
-            <option value="KLIENT">KLIENT</option>
-            <option value="PRACOWNIK">PRACOWNIK</option>
-          </select>
         </div>
 
         <button type="submit" class="btn btn-primary w-100 mt-3">Zarejestruj się</button>

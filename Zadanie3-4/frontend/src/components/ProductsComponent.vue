@@ -1,9 +1,10 @@
 <script setup>
-import {ref, computed, onMounted, reactive} from "vue";
+import { ref, computed, onMounted, reactive } from "vue";
 import axios from "axios";
+import ProductCard from "./ProductCard.vue";
+
 const selectedCategory = ref("");
 const searchQuery = ref("");
-const tableHeaders = ["#", "Nazwa", "Opis", "Cena", "Waga", "Kategoria"];
 
 const state = reactive({
   products: [],
@@ -18,11 +19,11 @@ onMounted(async () => {
     const response2 = await axios.get(`/api/categories/`);
     state.categories = response2.data.categories;
   } catch (error) {
-    console.log("Error fetching jobs or categories.", error);
+    console.error("Error fetching jobs or categories.", error);
   } finally {
     state.isLoading = false;
   }
-})
+});
 
 const filteredProducts = computed(() => {
   return state.products.filter((product) => {
@@ -47,19 +48,20 @@ const selectCategory = (categoryID) => {
   </div>
   <div v-else>
     <div class="container">
+      <h2>Lista produktów</h2>
       <div class="dropdown d-flex justify-content-end mb-3">
         <input
-          type="search"
-          class="form-control me-2 custom-width"
-          placeholder="Wyszukaj po nazwie produktu"
-          v-model="searchQuery"
+            type="search"
+            class="form-control me-2 custom-width"
+            placeholder="Wyszukaj po nazwie produktu"
+            v-model="searchQuery"
         />
         <button
-          class="btn btn-secondary dropdown-toggle"
-          type="button"
-          id="categoryDropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="categoryDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
         >
           Wybierz kategorię
         </button>
@@ -71,9 +73,9 @@ const selectCategory = (categoryID) => {
           </li>
           <li v-for="category in state.categories" :key="category._id">
             <a
-              class="dropdown-item"
-              href="#"
-              @click.prevent="selectCategory(category._id)"
+                class="dropdown-item"
+                href="#"
+                @click.prevent="selectCategory(category._id)"
             >
               {{ category.name }}
             </a>
@@ -81,28 +83,19 @@ const selectCategory = (categoryID) => {
         </ul>
       </div>
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th v-for="header in tableHeaders" :key="header">
-              {{ header }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="state.products.length === 0">
-            <td colspan="6" class="text-center">Brak produktów</td>
-          </tr>
-          <tr v-else v-for="(product, index) in filteredProducts" :key="index">
-            <th scope="row">{{ index + 1 }}</th>
-            <td>{{ product.name }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ product.unitPrice }}</td>
-            <td>{{ product.unitWeight }}</td>
-            <td>{{ product.category.name }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="row">
+        <div v-if="filteredProducts.length === 0" class="col-12 text-center">
+          Brak produktów
+        </div>
+        <div
+            v-else
+            v-for="product in filteredProducts"
+            :key="product._id"
+            class="col-md-4 mb-4"
+        >
+          <ProductCard :product="product" :categories="state.categories"> </ProductCard>
+        </div>
+      </div>
     </div>
   </div>
 </template>

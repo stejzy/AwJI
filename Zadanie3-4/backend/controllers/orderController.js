@@ -126,15 +126,13 @@ export const getOrderById = async (req, res) => {
     }
 }
 
-export const getOrdersByStatusId = async (req, res) => {
+export const getOrdersByStatusName = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { name } = req.params;
 
-        if (!Types.ObjectId.isValid(id)) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid order status ID format.' });
-        }
+        const orderStatus = await OrderStatus.findOne({name: name});
 
-        const orders = await Order.find({ orderStatus: id }).populate('orderedItems.product orderStatus');
+        const orders = await Order.find({ orderStatus: orderStatus._id }).populate('orderedItems.product orderStatus');
 
         if (orders.length === 0) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'No orders found for this status' });
@@ -154,7 +152,7 @@ export const getOrdersByStatusId = async (req, res) => {
 export const updateOrder = async (req, res) => {
     try {
         const { id } = req.params;
-        const { orderStatus, username, email, phoneNumber, orderedItems } = req.body;
+        const { statusName, username, email, phoneNumber, orderedItems } = req.body;
 
         if (!Types.ObjectId.isValid(id)) {
             return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid order ID format.' });
@@ -165,12 +163,10 @@ export const updateOrder = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ message: `Order with ID ${id} not found.` });
         }
 
-        if (orderStatus) {
-            if (!Types.ObjectId.isValid(orderStatus)) {
-                return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid order status ID format.' });
-            }
+        if (statusName) {
+            const orderStatus = await OrderStatus.findOne({name: statusName});
 
-            const newStatus = await OrderStatus.findOne({ _id: orderStatus });
+            const newStatus = await OrderStatus.findOne({ _id: orderStatus._id });
             if (!newStatus) {
                 return res.status(StatusCodes.BAD_REQUEST).json({ message: `Order status '${orderStatus}' not found.` });
             }

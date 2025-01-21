@@ -4,6 +4,7 @@ import { generateSeoDescription } from "./groqController.js";
 
 import { StatusCodes } from 'http-status-codes';
 import { Types } from "mongoose";
+import {OrderStatus} from "../models/orderStatus.js";
 
 
 export const getAllProducts = async (req, res) => {
@@ -85,13 +86,9 @@ export const updateProduct = async (req, res) => {
         const { id } = req.params;
         const { name, description, unitPrice, unitWeight, category } = req.body;
 
-        if (category && !Types.ObjectId.isValid(category)) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid category ID format.' });
-        }
-
         let updatedCategory = null;
         if (category) {
-            updatedCategory = await Category.findById(category);
+            updatedCategory = await Category.findOne({_id: category._id});
             if (!updatedCategory) {
                 return res.status(StatusCodes.NOT_FOUND).json({ message: 'Category not found.' });
             }

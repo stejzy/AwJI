@@ -3,6 +3,8 @@ import { createPinia } from 'pinia';
 import App from "./App.vue";
 import router from "./router/routes.js";
 import 'primeicons/primeicons.css'
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
@@ -12,6 +14,7 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
+app.use(Toast);
 app.mount("#app");
 
 

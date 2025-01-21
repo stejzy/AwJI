@@ -8,7 +8,7 @@ import {computed} from "vue";
 </script>
 
 <template>
-  <div class="container d-flex justify-content-center align-items-center">
+  <div class="container d-flex justify-content-center align-items-center mt-5">
       <ProductsComponent />
   </div>
 </template>

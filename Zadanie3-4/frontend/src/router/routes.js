@@ -3,7 +3,8 @@ import HomeView from "@/views/HomeView.vue";
 import {useAuthStore} from "@/stores/auth.js";
 import LoginComponent from "@/views/Login.vue";
 import RegisterComponent from "@/views/Register.vue";
-import Cart from "@/components/Cart.vue";
+import Cart from "@/views/Cart.vue";
+import Orders from "@/views/Orders.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,12 @@ const router = createRouter({
             path: "/cart",
             name: "cart",
             component: Cart,
+            meta: { requiresAuth: true }
+        },
+        {
+            path: "/orders",
+            name: "orders",
+            component: Orders,
             meta: { requiresAuth: true }
         }
     ]

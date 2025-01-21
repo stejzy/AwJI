@@ -22,7 +22,7 @@ const login = async () => {
 
 <template>
   <div
-    class="container d-flex justify-content-center align-items-center min-vh-100"
+    class="container d-flex justify-content-center align-items-center mt-5"
   >
     <div class="w-50 p-4 border rounded shadow">
       <h1 class="text-center">Zaloguj się</h1>
